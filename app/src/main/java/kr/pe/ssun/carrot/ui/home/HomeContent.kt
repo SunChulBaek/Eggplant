@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,10 +34,21 @@ fun HomeContent(
         TextField(
             modifier = Modifier.fillMaxWidth(),
             leadingIcon = { Icon(Icons.Default.Search, "Search") },
+            placeholder = { Text("Search") },
             value = search,
             onValueChange = {
                 search = it
                 viewModel.search(it)
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    search = ""
+                    viewModel.search("")
+                }) {
+                    if (search.isNotBlank()) {
+                        Icon(Icons.Default.Close, "Search")
+                    }
+                }
             }
         )
         Box(modifier = Modifier.weight(1f)) {
