@@ -19,16 +19,10 @@ internal fun Project.configureKotlinAndroid(
         val propFile = rootProject.file("build.properties")
         val properties = Properties().apply { load(FileInputStream(propFile))}
 
-        val localPropFile = rootProject.file("local.properties")
-        val localProperties = Properties().apply { load(FileInputStream(localPropFile))}
-
         compileSdk = properties.getProperty("compileSdk").toInt()
 
         defaultConfig {
             minSdk = properties.getProperty("minSdk").toInt()
-
-            buildConfigField("String", "MARVEL_PUBLIC_KEY", "\"${localProperties.getProperty("publicKey")}\"")
-            buildConfigField("String", "MARVEL_PRIVATE_KEY", "\"${localProperties.getProperty("privateKey")}\"")
         }
 
         compileOptions {
