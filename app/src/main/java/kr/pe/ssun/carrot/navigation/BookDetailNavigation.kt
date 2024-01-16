@@ -1,26 +1,35 @@
 package kr.pe.ssun.carrot.navigation
 
+import android.net.Uri
 import android.util.Base64
 import android.widget.Toast
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import kr.pe.ssun.carrot.ui.detail.BookDetailScreen
 
 const val bookDetailNavigationRoute = "book_detail"
 
-const val bookDetailIdArgs = "id"
-const val bookDetailNameArgs = "name"
-const val bookDetailUrlArgs = "url"
+const val bookDetailIsbnArgs = "isbn13"
+const val bookDetailTitleArgs = "title"
+const val bookDetailImageArgs = "image"
 
-fun NavController.navigateToBookDetail(id: Int, name: String, thumbnail: String, navOptions: NavOptions? = null) {
-    val encoded = Base64.encodeToString(thumbnail.toByteArray(), Base64.DEFAULT)
-    this.navigate("$bookDetailNavigationRoute/$id/$name/$encoded", navOptions)
+internal class BookDetailArgs(val isbn13: String, val title: String, val image: String) {
+    constructor(savedStateHandle: SavedStateHandle) : this(
+        isbn13 = Uri.decode(checkNotNull(savedStateHandle[bookDetailIsbnArgs])),
+        title = Uri.decode(checkNotNull(savedStateHandle[bookDetailTitleArgs])),
+        image = Uri.decode(checkNotNull(savedStateHandle[bookDetailImageArgs]))
+    )
+}
+
+fun NavController.navigateToBookDetail(isbn13: String, title: String, image: String, navOptions: NavOptions? = null) {
+    val encodedTitle = Base64.encodeToString(title.toByteArray(), Base64.DEFAULT)
+    val encodedImage = Base64.encodeToString(image.toByteArray(), Base64.DEFAULT)
+    this.navigate("$bookDetailNavigationRoute/$isbn13/$encodedTitle/$encodedImage", navOptions)
 }
 
 fun NavGraphBuilder.bookDetailScreen(
@@ -33,23 +42,19 @@ fun NavGraphBuilder.bookDetailScreen(
     onBack: () -> Unit,
 ) {
     composable(
-        route = "$bookDetailNavigationRoute/{$bookDetailIdArgs}/{$bookDetailNameArgs}/{$bookDetailUrlArgs}",
-        arguments = listOf(
-            navArgument(bookDetailIdArgs) {
-                type = NavType.IntType
-            }
-        ),
+        route = "$bookDetailNavigationRoute/{$bookDetailIsbnArgs}/{$bookDetailTitleArgs}/{$bookDetailImageArgs}",
         enterTransition = { enterTransition },
         exitTransition = { exitTransition },
         popEnterTransition = { popEnterTransition },
         popExitTransition = { popExitTransition },
     ) { backStackEntry ->
-        val name = backStackEntry.arguments?.getString(bookDetailNameArgs)
-        val encodedUrl = backStackEntry.arguments?.getString(bookDetailUrlArgs)
-        val decodedUrl = String(Base64.decode(encodedUrl, 0))
+        val encodedTitle = backStackEntry.arguments?.getString(bookDetailTitleArgs)
+        val decodedTitle = String(Base64.decode(encodedTitle, 0))
+        val encodedImage = backStackEntry.arguments?.getString(bookDetailImageArgs)
+        val decodedImage = String(Base64.decode(encodedImage, 0))
         BookDetailScreen(
-            name = name,
-            thumbnail = decodedUrl,
+            title = decodedTitle,
+            image = decodedImage,
         )
     }
 }

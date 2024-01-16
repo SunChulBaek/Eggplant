@@ -1,5 +1,6 @@
 package kr.pe.ssun.carrot.network
 
+import kr.pe.ssun.carrot.network.model.NetworkBookDetail
 import kr.pe.ssun.carrot.network.model.NetworkWrapper
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -22,6 +23,15 @@ class CarrotBookNetwork @Inject constructor(
         NetworkWrapper::readWrapper
     ) ?: run {
         throw Exception("searchBook Exception!!!")
+    }
+
+    override suspend fun getBook(
+        isbn13: String
+    ): NetworkBookDetail = get(
+        "books/$isbn13",
+        NetworkBookDetail::readBookDetail
+    ) ?: run {
+        throw Exception("getBook Exception!!!")
     }
 
     private fun <R> get(

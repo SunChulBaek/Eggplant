@@ -3,7 +3,6 @@ package kr.pe.ssun.carrot.network.model
 import android.util.JsonReader
 import com.google.gson.annotations.SerializedName
 import kr.pe.ssun.carrot.data.model.Book
-import timber.log.Timber
 
 data class NetworkBook(
     @SerializedName("title") val title: String,
@@ -27,7 +26,7 @@ data class NetworkBook(
                 when (reader.nextName()) {
                     "title" -> title = reader.nextString()
                     "subtitle" -> subtitle = reader.nextString()
-                    "isbn" -> isbn = reader.nextString()
+                    "isbn13" -> isbn = reader.nextString()
                     "price" -> price = reader.nextString()
                     "image" -> image = reader.nextString()
                     "url" -> url = reader.nextString()
@@ -42,8 +41,8 @@ data class NetworkBook(
 }
 
 fun NetworkBook.asExternalModel() = Book(
-    id = 0,
-    name = title,
+    isbn13 = isbn,
+    title = title,
     description = subtitle,
-    thumbnail = image
+    image = image
 )

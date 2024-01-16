@@ -63,14 +63,14 @@ fun HomeContent(
                         count = books.size,
                         itemContent = { index ->
                             BookItem(modifier = Modifier.padding(top = 10.dp), item = books[index]) {
-//                                navigate(
-//                                    "book_detail",
-//                                    Triple(
-//                                        books[index]!!.id,
-//                                        books[index]!!.name,
-//                                        books[index]!!.thumbnail
-//                                    )
-//                                )
+                                navigate(
+                                    "book_detail",
+                                    Triple(
+                                        books[index]!!.isbn13,
+                                        books[index]!!.title,
+                                        books[index]!!.image
+                                    )
+                                )
                             }
                         }
                     )

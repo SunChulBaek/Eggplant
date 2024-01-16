@@ -28,17 +28,17 @@ import coil.compose.SubcomposeAsyncImage
 @Composable
 fun BookDetailScreen(
     viewModel: BookDetailViewModel = hiltViewModel(),
-    name: String?,
-    thumbnail: String?
+    title: String?,
+    image: String?
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val character = (uiState as? BookDetailUiState.Success)?.book
+    val bookDetail = (uiState as? BookDetailUiState.Success)?.bookDetail
 
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopAppBar(title = { Text(name ?: "") }) },
+        topBar = { TopAppBar(title = { Text(title ?: "") }) },
         snackbarHost = { SnackbarHost(snackbarHostState)}
     ) { innerPadding ->
         Column(
@@ -49,7 +49,7 @@ fun BookDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1 / 1f),
-                model = thumbnail,
+                model = image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

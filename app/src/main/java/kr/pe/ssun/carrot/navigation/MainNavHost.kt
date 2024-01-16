@@ -107,8 +107,8 @@ fun navigate(
     params: Any? = null,
 ) {
     when (dest) {
-        bookDetailNavigationRoute -> (params as? Triple<*, *, *>)?.let { (id, name, thumbnail) ->
-            navController.navigateToBookDetail(id as Int, name as String, thumbnail as String)
+        bookDetailNavigationRoute -> (params as? Triple<*, *, *>)?.let { (isbn13, title, image) ->
+            navController.navigateToBookDetail(isbn13 as String, title as String, image as String)
         }
         else -> TODO()
     }

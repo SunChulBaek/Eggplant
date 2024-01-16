@@ -39,7 +39,7 @@ fun BookItem(
         Row(modifier = Modifier.fillMaxSize()) {
             CarrotImage(
                 modifier = Modifier.size(80.dp),
-                url = item.thumbnail ?: "",
+                url = item.image ?: "",
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 loading = {
@@ -56,7 +56,7 @@ fun BookItem(
                     modifier = Modifier
                         .padding(start = 8.dp, top = 8.dp, end = 8.dp)
                         .fillMaxWidth(),
-                    text = item.name ?: "",
+                    text = item.title ?: "",
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface
                 )

@@ -7,19 +7,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kr.pe.ssun.carrot.domain.SearchBookParam
-import kr.pe.ssun.carrot.domain.SearchBookUseCase
+import kr.pe.ssun.carrot.domain.GetBookParam
+import kr.pe.ssun.carrot.domain.GetBookUseCase
+import kr.pe.ssun.carrot.navigation.BookDetailArgs
 import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    getCharacterUseCase: SearchBookUseCase
+    getBookUseCase: GetBookUseCase
 ) : ViewModel() {
 
-    val id = savedStateHandle.get<Int>("id") ?: 0
+    private val args = BookDetailArgs(savedStateHandle)
 
-    val uiState = getCharacterUseCase(SearchBookParam(""))
+    val uiState = getBookUseCase(GetBookParam(args.isbn13))
         .map { result ->
             result.getOrNull()?.let {
                 BookDetailUiState.Error
