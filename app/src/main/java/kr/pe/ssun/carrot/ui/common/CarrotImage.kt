@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.io.InputStream
@@ -35,12 +36,12 @@ fun CarrotImage(
     var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
     LaunchedEffect(url) {
-        launch(Dispatchers.IO) {
+        bitmap = async(Dispatchers.IO) {
             // TODO : 캐시되어 있는지 확인
             // 네트웍에서 불러오기
-            bitmap = get(url, BitmapFactory::decodeStream)?.asImageBitmap()
+            get(url, BitmapFactory::decodeStream)?.asImageBitmap()
             // TODO : 파일로 저장
-        }
+        }.await()
     }
 
     Box(modifier = modifier) {
