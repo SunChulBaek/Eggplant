@@ -15,12 +15,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
 import kr.pe.ssun.carrot.data.model.Book
+import kr.pe.ssun.carrot.ui.common.CarrotImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,17 +37,17 @@ fun BookItem(
             .height(80.dp)
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
-            SubcomposeAsyncImage(
+            CarrotImage(
                 modifier = Modifier.size(80.dp),
-                model = item.thumbnail,
+                url = item.thumbnail ?: "",
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
                 loading = {
                     CircularProgressIndicator(
                         modifier = Modifier.padding(20.dp),
-                        color = MaterialTheme.colorScheme.primary,
+                        color = Color(0xFF4ca066)
                     )
                 },
-                contentScale = ContentScale.Crop,
-                contentDescription = null
             )
             Column(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight()
