@@ -2,35 +2,60 @@ package kr.pe.ssun.carrot.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kr.pe.ssun.carrot.data.SearchBookPagingSource
-import kr.pe.ssun.carrot.data.repository.BookRepository
+import kr.pe.ssun.carrot.data.model.Book
+import kr.pe.ssun.carrot.domain.SearchBookParam
+import kr.pe.ssun.carrot.domain.SearchBookUseCase
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: BookRepository,
+    searchBookUseCase: SearchBookUseCase,
 ) : ViewModel() {
 
-    private var _books = Pager(
-        config = PagingConfig(pageSize = 20)
-    ) { SearchBookPagingSource(repository, "") }
-    .flow.cachedIn(viewModelScope)
-    val books get() = _books
+    val param = MutableStateFlow(SearchBookParam(""))
+
+    private var books = mutableListOf<Book>()
+
+    val uiState: StateFlow<HomeUiState> = param
+        .debounce(300)
+        .map { param ->
+            if ((param.page ?: 0) == 0) {
+                books.clear()
+            }
+            searchBookUseCase(param).first().getOrNull()?.let { result ->
+                books.addAll(result.books)
+                // books를 그대로 올리니까 반영이 안되서 새 리스트를 만듬
+                HomeUiState.Success(
+                    books = mutableListOf<Book>().apply { addAll(books) },
+                    currentPage = result.currentPage
+                )
+            } ?: run {
+                Timber.d("[sunchulbaek] error")
+                HomeUiState.Error
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = HomeUiState.Loading
+        )
 
     fun search(query: String) = viewModelScope.launch {
-        // TODO : debounce 걸기
-        Timber.d("[sunchulbaek] search = $query xxx")
-        // query를 StateFlow로 만들어서 상세화면 진입 후 돌아왔을 때, 다시 Pager가 생성되는 이슈가 있어서
-        // search에 Pager 생성하도록 변경 (상세 진입 후 스크롤 포지션 깨짐 vs 매번 api 호출)
-        _books = Pager(
-            config = PagingConfig(pageSize = 20)
-        ) { SearchBookPagingSource(repository, query) }
-            .flow.cachedIn(viewModelScope)
+        param.emit(SearchBookParam(query))
+    }
+
+    fun loadMore() = viewModelScope.launch {
+        param.value.let { oldParam ->
+            param.emit(SearchBookParam(oldParam.query, (oldParam.page ?: 1) + 1))
+        }
     }
 }

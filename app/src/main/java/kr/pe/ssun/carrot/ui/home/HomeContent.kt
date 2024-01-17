@@ -13,14 +13,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun HomeContent(
     viewModel: HomeViewModel = hiltViewModel(),
     navigate: (String, Any?) -> Unit
 ) {
-    val books = viewModel.books.collectAsLazyPagingItems()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val books = (uiState as? HomeUiState.Success)?.books
     val listState = rememberLazyListState()
 
     Column(
@@ -53,17 +54,23 @@ fun HomeContent(
         Box(modifier = Modifier.weight(1f)) {
             LazyColumn(state = listState) {
                 items(
-                    count = books.itemCount,
+                    count = books?.size ?: 0,
                     itemContent = { index ->
-                        BookItem(modifier = Modifier.padding(top = 10.dp), item = books[index]!!) {
+                        BookItem(
+                            modifier = Modifier.padding(top = 10.dp),
+                            item = books?.get(index)!!
+                        ) {
                             navigate(
                                 "book_detail",
                                 Triple(
-                                    books[index]!!.isbn13,
-                                    books[index]!!.title,
-                                    books[index]!!.image
+                                    books[index].isbn13,
+                                    books[index].title,
+                                    books[index].image
                                 )
                             )
+                        }
+                        if (index == books.size - 1) {
+                            viewModel.loadMore()
                         }
                     }
                 )

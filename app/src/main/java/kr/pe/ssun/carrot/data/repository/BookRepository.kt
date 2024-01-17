@@ -7,6 +7,7 @@ import kr.pe.ssun.carrot.data.model.BookDetail
 import kr.pe.ssun.carrot.network.BookNetworkDataSource
 import kr.pe.ssun.carrot.network.model.NetworkBook
 import kr.pe.ssun.carrot.network.model.asExternalModel
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,9 +16,13 @@ class BookRepository @Inject constructor(
     private val network: BookNetworkDataSource
 ) {
 
-    fun searchBook(query: String, page: Int? = null): Flow<List<Book>?> = flow {
+    fun searchBook(query: String, page: Int? = null): Flow<Pair<List<Book>?, Int>> = flow {
+        Timber.d("[sunchulbaek] BookRepository.searchBook($query, $page)")
         val data = network.searchBook(query = query, page = page)
-        emit(data.books.map(NetworkBook::asExternalModel))
+        emit(Pair(
+            data.books.map(NetworkBook::asExternalModel),
+            data.page
+        ))
     }
 
     fun getBook(isbn13: String): Flow<BookDetail?> = flow {
