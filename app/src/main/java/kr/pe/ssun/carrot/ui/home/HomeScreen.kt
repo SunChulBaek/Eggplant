@@ -19,7 +19,6 @@ const val BACK_PRESS_DELAY_TIME: Long = 2000
 var backKeyPressedTime: Long = 0
 var toast: Toast? = null
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     navigate: (String, Any?) -> Unit,
