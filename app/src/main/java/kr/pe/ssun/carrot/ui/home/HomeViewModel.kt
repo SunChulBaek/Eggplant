@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(
     searchBookUseCase: SearchBookUseCase,
 ) : ViewModel() {
 
-    val param = MutableStateFlow(SearchBookParam(""))
+    private val param = MutableStateFlow(SearchBookParam(""))
 
     private var books = mutableListOf<Book>()
 
