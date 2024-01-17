@@ -15,8 +15,8 @@ class BookRepository @Inject constructor(
     private val network: BookNetworkDataSource
 ) {
 
-    fun searchBook(query: String): Flow<List<Book>?> = flow {
-        val data = network.searchBook(query = query)
+    fun searchBook(query: String, page: Int? = null): Flow<List<Book>?> = flow {
+        val data = network.searchBook(query = query, page = page)
         emit(data.books.map(NetworkBook::asExternalModel))
     }
 

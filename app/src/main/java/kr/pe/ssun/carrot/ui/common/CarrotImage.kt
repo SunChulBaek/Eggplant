@@ -88,12 +88,15 @@ private fun cache(context: Context, url: String): Bitmap? {
     var bitmap: Bitmap? = null
     try {
         val file = File("${context.cacheDir.absolutePath}/${md5(url)}")
+        if (!file.exists()) {
+            Timber.e("[sunchulbaek] Not Cached!!! url = $url")
+            return null
+        }
         val options = BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888
         bitmap = BitmapFactory.decodeStream(FileInputStream(file), null, options)
         Timber.d("[sunchulbaek] Cache Hit!!! url = $url")
     } catch (e: Exception) {
-        Timber.e("[sunchulbaek] Not Cached!!! url = $url")
         e.printStackTrace()
     }
     return bitmap
