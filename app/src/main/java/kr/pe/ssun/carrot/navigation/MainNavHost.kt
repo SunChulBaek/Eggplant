@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import kr.pe.ssun.carrot.data.model.Book
 import kr.pe.ssun.carrot.ui.common.MyWebView
 
 @Composable
@@ -41,7 +42,7 @@ fun MainNavHost(
             showToast = showToast,
             onBack = onBack
         )
-        // 포토
+        // 책상세
         bookDetailScreen(
             enterTransition = defaultEnterTransition(),
             exitTransition = defaultExitTransition(),
@@ -49,7 +50,7 @@ fun MainNavHost(
             popExitTransition = defaultPopExitTransition(),
             navigate = { route, params -> navigate(navController, route, params) },
             showToast = showToast,
-            onBack = onBack
+            onBack = { navController.popBackStack() }
         )
         // 웹뷰
         composable(
@@ -107,8 +108,8 @@ fun navigate(
     params: Any? = null,
 ) {
     when (dest) {
-        bookDetailNavigationRoute -> (params as? Triple<*, *, *>)?.let { (isbn13, title, image) ->
-            navController.navigateToBookDetail(isbn13 as String, title as String, image as String)
+        bookDetailNavigationRoute -> (params as? Book)?.let { book ->
+            navController.navigateToBookDetail(book)
         }
         else -> TODO()
     }

@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kr.pe.ssun.carrot.data.model.BookDetail
 import kr.pe.ssun.carrot.domain.GetBookParam
 import kr.pe.ssun.carrot.domain.GetBookUseCase
 import kr.pe.ssun.carrot.navigation.BookDetailArgs
@@ -23,11 +24,18 @@ class BookDetailViewModel @Inject constructor(
     val uiState = getBookUseCase(GetBookParam(args.isbn13))
         .map { result ->
             result.getOrNull()?.let {
-                BookDetailUiState.Error
+                BookDetailUiState.Success(it)
             } ?: BookDetailUiState.Error
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = BookDetailUiState.Loading
+            initialValue = BookDetailUiState.Loading(
+                BookDetail(
+                    title = args.title,
+                    subtitle = args.subtitle,
+                    price = args.price,
+                    image = args.image
+                )
+            )
         )
 }

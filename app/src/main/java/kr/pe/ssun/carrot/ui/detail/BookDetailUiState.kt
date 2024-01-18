@@ -6,6 +6,8 @@ sealed interface BookDetailUiState {
     data class Success(
         val bookDetail: BookDetail
     ) : BookDetailUiState
-    object Loading : BookDetailUiState
+    data class Loading(
+        val bookDetail: BookDetail
+    ) : BookDetailUiState
     object Error : BookDetailUiState
 }

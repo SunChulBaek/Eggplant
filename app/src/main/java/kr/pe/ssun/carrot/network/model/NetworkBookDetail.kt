@@ -90,6 +90,12 @@ data class NetworkBookDetail(
 }
 
 fun NetworkBookDetail.asExternalModel() = BookDetail(
+    image = image,
     title = title,
-    image = image
+    subtitle = subtitle,
+    authors = authors,
+    publisher = publisher,
+    year = year,
+    price = price,
+    description = desc,
 )

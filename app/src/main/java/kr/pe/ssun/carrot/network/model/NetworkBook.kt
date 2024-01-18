@@ -41,8 +41,9 @@ data class NetworkBook(
 }
 
 fun NetworkBook.asExternalModel() = Book(
-    isbn13 = isbn,
     title = title,
-    description = subtitle,
-    image = image
+    subtitle = subtitle,
+    isbn13 = isbn,
+    price = price,
+    image = image,
 )

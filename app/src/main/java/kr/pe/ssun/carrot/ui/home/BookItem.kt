@@ -64,7 +64,7 @@ fun BookItem(
                     modifier = Modifier
                         .padding(start = 8.dp, bottom = 8.dp, end = 8.dp)
                         .fillMaxSize(),
-                    text = item.description ?: "",
+                    text = item.subtitle ?: "",
                     style = MaterialTheme.typography.bodyMedium,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onSurface

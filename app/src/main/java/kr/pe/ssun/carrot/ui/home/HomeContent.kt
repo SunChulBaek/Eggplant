@@ -62,11 +62,7 @@ fun HomeContent(
                         ) {
                             navigate(
                                 "book_detail",
-                                Triple(
-                                    books[index].isbn13,
-                                    books[index].title,
-                                    books[index].image
-                                )
+                                books[index]
                             )
                         }
                         if (index == books.size - 1) {
