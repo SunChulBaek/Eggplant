@@ -39,7 +39,7 @@ internal class BookDetailArgs(
 fun NavController.navigateToBookDetail(book: Book, navOptions: NavOptions? = null) {
     val isbn13 = Uri.encode(book.isbn13)
     val encodedTitle = Uri.encode(book.title)
-    val encodedSubtitle = Uri.encode(book.subtitle)
+    val encodedSubtitle = Uri.encode(if (book.subtitle.isEmpty()) " " else book.subtitle)
     val encodedPrice = Uri.encode(book.price)
     val encodedImage = Uri.encode(book.image)
     this.navigate("$bookDetailNavigationRoute/$encodedTitle/$encodedSubtitle/$isbn13/$encodedPrice/$encodedImage", navOptions)
