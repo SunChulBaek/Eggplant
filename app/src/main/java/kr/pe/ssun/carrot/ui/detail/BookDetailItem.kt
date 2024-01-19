@@ -70,13 +70,13 @@ sealed interface BookDetailItem {
         override fun ItemContent() = Column(
             modifier = Modifier.padding(horizontal = 10.dp)
         ) {
-            KeyValueView(key = "Price", value = book.price, color = Color.LightGray)
+            KeyValueView(key = "Price", value = book.price, color = Color(0xFF4ca066).copy(0.3f))
             KeyValueView(key = "Rating", value = book.rating)
-            KeyValueView(key = "Author", value = book.authors, color = Color.LightGray)
+            KeyValueView(key = "Author", value = book.authors, color = Color(0xFF4ca066).copy(0.3f))
             KeyValueView(key = "Publisher", value = book.publisher)
-            KeyValueView(key = "Published", value = book.year, color = Color.LightGray)
+            KeyValueView(key = "Published", value = book.year, color = Color(0xFF4ca066).copy(0.3f))
             KeyValueView(key = "Pages", value = book.pages)
-            KeyValueView(key = "ISBN-10", value = book.isbn10, color = Color.LightGray)
+            KeyValueView(key = "ISBN-10", value = book.isbn10, color = Color(0xFF4ca066).copy(0.3f))
             KeyValueView(key = "ISBN-13", value = book.isbn13)
         }
     }
