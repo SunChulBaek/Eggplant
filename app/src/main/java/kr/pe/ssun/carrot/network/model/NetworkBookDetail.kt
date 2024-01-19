@@ -98,4 +98,8 @@ fun NetworkBookDetail.asExternalModel() = BookDetail(
     year = year,
     price = price,
     description = desc,
+    pages = pages,
+    rating = rating,
+    isbn10 = isbn10,
+    isbn13 = isbn13,
 )

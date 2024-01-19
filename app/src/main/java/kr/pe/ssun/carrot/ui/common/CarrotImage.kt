@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +56,7 @@ fun CarrotImage(
     Box(modifier = modifier) {
         if (bitmap != null) {
             Image(
+                modifier = Modifier.fillMaxSize(),
                 bitmap = bitmap!!,
                 contentScale = contentScale,
                 contentDescription = contentDescription

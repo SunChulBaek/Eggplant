@@ -24,18 +24,28 @@ class BookDetailViewModel @Inject constructor(
     val uiState = getBookUseCase(GetBookParam(args.isbn13))
         .map { result ->
             result.getOrNull()?.let {
-                BookDetailUiState.Success(it)
+                BookDetailUiState.Success(makeItems(it))
             } ?: BookDetailUiState.Error
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = BookDetailUiState.Loading(
-                BookDetail(
+                makeItems(BookDetail(
                     title = args.title,
                     subtitle = args.subtitle,
                     price = args.price,
                     image = args.image
-                )
+                ))
             )
         )
+
+    private fun makeItems(book: BookDetail): List<BookDetailItem> = mutableListOf<BookDetailItem>().apply {
+        add(BookDetailItem.BookDetailImage(book.image))
+        add(BookDetailItem.BookDetailTitle(book.title))
+        if (book.subtitle.isNotBlank()) {
+            add(BookDetailItem.BookDetailSubtitle(book.subtitle))
+        }
+        add(BookDetailItem.BookDetailInfo(book))
+        add(BookDetailItem.BookDetailDesc(book.description))
+    }
 }

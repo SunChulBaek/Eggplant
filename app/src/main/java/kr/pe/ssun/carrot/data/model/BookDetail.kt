@@ -9,4 +9,8 @@ data class BookDetail(
     val year: String? = null,
     val price: String,
     val description: String? = null,
+    val pages: String? = null,
+    val rating: String? = null,
+    val isbn10: String? = null,
+    val isbn13: String? = null
 )
