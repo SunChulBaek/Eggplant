@@ -24,7 +24,6 @@ fun HomeContent(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val books = (uiState as? HomeUiState.Success)?.books
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
     Column(
@@ -72,12 +71,6 @@ fun HomeContent(
                             viewModel.loadMore()
                         }
                     }
-                )
-            }
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = Color(0xFF4ca066)
                 )
             }
         }
