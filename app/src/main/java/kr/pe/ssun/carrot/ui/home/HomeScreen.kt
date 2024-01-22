@@ -2,18 +2,15 @@ package kr.pe.ssun.carrot.ui.home
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -44,7 +41,7 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar(isLoading = isLoading) },
+        topBar = { MyTopAppBar() },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
@@ -54,6 +51,12 @@ fun HomeScreen(
                 loadMore = viewModel::loadMore,
                 navigate = navigate
             )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color(0xFF4ca066)
+                )
+            }
         }
     }
 }
@@ -82,19 +85,11 @@ fun BackCloseHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(isLoading: Boolean) = TopAppBar(
+fun MyTopAppBar() = TopAppBar(
     title = { Text(stringResource(R.string.app_name))},
     navigationIcon = {
         IconButton(onClick = { }) {
             Icon(Icons.Default.Menu, "Menu")
-        }
-    },
-    actions = {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.padding(end = 10.dp).size(32.dp),
-                color = Color(0xFF4ca066)
-            )
         }
     }
 )
