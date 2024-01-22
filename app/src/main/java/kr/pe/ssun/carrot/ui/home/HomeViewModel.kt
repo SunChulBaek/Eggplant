@@ -26,13 +26,17 @@ class HomeViewModel @Inject constructor(
 
     private var books = mutableListOf<Book>()
 
+    val isLoading = MutableStateFlow(false)
+
     val uiState: StateFlow<HomeUiState> = param
         .debounce(300)
         .map { param ->
+            isLoading.emit(true)
             if ((param.page ?: 0) == 0) {
                 books.clear()
             }
             searchBookUseCase(param).first().getOrNull()?.let { result ->
+                isLoading.emit(false)
                 books.addAll(result.books)
                 // books를 그대로 올리니까 반영이 안되서 새 리스트를 만듬
                 HomeUiState.Success(
@@ -41,6 +45,7 @@ class HomeViewModel @Inject constructor(
                 )
             } ?: run {
                 Timber.d("[sunchulbaek] error")
+                isLoading.emit(false)
                 HomeUiState.Error
             }
         }.stateIn(

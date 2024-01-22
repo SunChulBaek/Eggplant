@@ -7,9 +7,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kr.pe.ssun.carrot.R
@@ -21,10 +27,15 @@ var toast: Toast? = null
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     navigate: (String, Any?) -> Unit,
     showToast: (String) -> Toast,
     onBack: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val books = (uiState as? HomeUiState.Success)?.books ?: listOf()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -33,11 +44,16 @@ fun HomeScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar() },
+        topBar = { MyTopAppBar(isLoading = isLoading) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            HomeContent(navigate = navigate)
+            HomeContent(
+                books = books,
+                search = viewModel::search,
+                loadMore = viewModel::loadMore,
+                navigate = navigate
+            )
         }
     }
 }
@@ -66,11 +82,19 @@ fun BackCloseHandler(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar() = TopAppBar(
+fun MyTopAppBar(isLoading: Boolean) = TopAppBar(
     title = { Text(stringResource(R.string.app_name))},
     navigationIcon = {
         IconButton(onClick = { }) {
             Icon(Icons.Default.Menu, "Menu")
+        }
+    },
+    actions = {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.padding(end = 10.dp).size(32.dp),
+                color = Color(0xFF4ca066)
+            )
         }
     }
 )

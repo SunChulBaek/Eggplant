@@ -10,20 +10,17 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kr.pe.ssun.carrot.data.model.Book
 
 @Composable
 fun HomeContent(
-    viewModel: HomeViewModel = hiltViewModel(),
+    books: List<Book>,
+    search: (String) -> Unit,
+    loadMore: () -> Unit,
     navigate: (String, Any?) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val books = (uiState as? HomeUiState.Success)?.books
     val listState = rememberLazyListState()
 
     Column(
@@ -40,12 +37,12 @@ fun HomeContent(
             value = search,
             onValueChange = {
                 search = it
-                viewModel.search(it)
+                search(it)
             },
             trailingIcon = {
                 IconButton(onClick = {
                     search = ""
-                    viewModel.search("")
+                    search("")
                 }) {
                     if (search.isNotBlank()) {
                         Icon(Icons.Default.Close, "Search")
@@ -56,11 +53,11 @@ fun HomeContent(
         Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             LazyColumn(state = listState) {
                 items(
-                    count = books?.size ?: 0,
+                    count = books.size,
                     itemContent = { index ->
                         BookItem(
                             modifier = Modifier.padding(top = 10.dp),
-                            item = books?.get(index)!!
+                            item = books.get(index)
                         ) {
                             navigate(
                                 "book_detail",
@@ -68,7 +65,7 @@ fun HomeContent(
                             )
                         }
                         if (index == books.size - 1) {
-                            viewModel.loadMore()
+                            loadMore()
                         }
                     }
                 )

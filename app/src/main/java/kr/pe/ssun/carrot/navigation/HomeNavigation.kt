@@ -25,6 +25,6 @@ fun NavGraphBuilder.homeScreen(
         popEnterTransition = { popEnterTransition },
         popExitTransition = { popExitTransition }
     ) {
-        HomeScreen(navigate, showToast, onBack)
+        HomeScreen(navigate = navigate, showToast = showToast, onBack = onBack)
     }
 }
