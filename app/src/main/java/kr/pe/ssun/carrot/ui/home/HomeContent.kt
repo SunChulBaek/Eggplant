@@ -10,7 +10,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +24,7 @@ fun HomeContent(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val books = (uiState as? HomeUiState.Success)?.books
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
     Column(
@@ -51,7 +54,7 @@ fun HomeContent(
                 }
             }
         )
-        Box(modifier = Modifier.weight(1f)) {
+        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
             LazyColumn(state = listState) {
                 items(
                     count = books?.size ?: 0,
@@ -69,6 +72,12 @@ fun HomeContent(
                             viewModel.loadMore()
                         }
                     }
+                )
+            }
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color(0xFF4ca066)
                 )
             }
         }
