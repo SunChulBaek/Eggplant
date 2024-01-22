@@ -78,6 +78,9 @@ sealed interface BookDetailItem {
             KeyValueView(key = "Pages", value = book.pages)
             KeyValueView(key = "ISBN-10", value = book.isbn10, color = Color(0xFF4ca066).copy(0.3f))
             KeyValueView(key = "ISBN-13", value = book.isbn13)
+            book.pdf?.keys?.forEachIndexed { index, key ->
+                KeyValueView(key = key, value = book.pdf.getValue(key), color = if (index % 2 == 0) Color(0xFF4ca066).copy(0.3f) else Color.Transparent)
+            }
         }
     }
 

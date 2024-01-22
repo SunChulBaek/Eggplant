@@ -12,5 +12,6 @@ data class BookDetail(
     val pages: String? = null,
     val rating: String? = null,
     val isbn10: String? = null,
-    val isbn13: String? = null
+    val isbn13: String? = null,
+    val pdf: Map<String, String>? = null,
 )

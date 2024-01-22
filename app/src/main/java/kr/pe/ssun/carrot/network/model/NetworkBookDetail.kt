@@ -21,7 +21,7 @@ data class NetworkBookDetail(
     @SerializedName("price") val price: String,
     @SerializedName("image") val image: String,
     @SerializedName("url") val url: String,
-    //@SerializedName("pdf") val pdf: Map<String, String>
+    @SerializedName("pdf") val pdf: Map<String, String>?
 ) {
     companion object {
         fun readBookDetail(inputStream: InputStream): NetworkBookDetail {
@@ -41,6 +41,7 @@ data class NetworkBookDetail(
                 var price = ""
                 var image = ""
                 var url = ""
+                var pdf: Map<String, String>? = null
 
                 reader.beginObject()
                 while (reader.hasNext()) {
@@ -59,6 +60,7 @@ data class NetworkBookDetail(
                         "price" -> price = reader.nextString()
                         "image" -> image = reader.nextString()
                         "url" -> url = reader.nextString()
+                        "pdf" -> pdf = readPdf(reader)
                         else -> reader.skipValue()
                     }
                 }
@@ -77,7 +79,8 @@ data class NetworkBookDetail(
                     desc = desc,
                     price = price,
                     image = image,
-                    url = url
+                    url = url,
+                    pdf = pdf
                 )
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -85,6 +88,14 @@ data class NetworkBookDetail(
             } finally {
                 reader.close()
             }
+        }
+
+        private fun readPdf(reader: JsonReader) = mutableMapOf<String, String>().apply {
+            reader.beginObject()
+            while (reader.hasNext()) {
+                this[reader.nextName()] = reader.nextString()
+            }
+            reader.endObject()
         }
     }
 }
@@ -102,4 +113,5 @@ fun NetworkBookDetail.asExternalModel() = BookDetail(
     rating = rating,
     isbn10 = isbn10,
     isbn13 = isbn13,
+    pdf = pdf
 )
