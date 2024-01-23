@@ -2,19 +2,16 @@ package kr.pe.ssun.carrot.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kr.pe.ssun.carrot.data.model.Book
+import kr.pe.ssun.carrot.ui.common.SimpleLoadMoreLazyColumn
 
 @Composable
 fun HomeContent(
@@ -24,8 +21,6 @@ fun HomeContent(
     loadMore: () -> Unit,
     navigate: (String, Any?) -> Unit
 ) {
-    val listState = rememberLazyListState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,32 +48,19 @@ fun HomeContent(
                 }
             }
         )
-        Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-            LazyColumn(state = listState) {
-                items(
-                    count = books.size,
-                    itemContent = { index ->
-                        BookItem(
-                            modifier = Modifier.padding(top = 10.dp),
-                            item = books.get(index)
-                        ) {
-                            navigate(
-                                "book_detail",
-                                books[index]
-                            )
-                        }
-                        if (index == books.size - 1 && !isLoading) {
-                            loadMore()
-                        }
-                    }
-                )
-            }
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = Color(0xFF4ca066)
-                )
-            }
-        }
+        SimpleLoadMoreLazyColumn(
+            modifier = Modifier.fillMaxWidth().weight(1f),
+            itemCount = books.size,
+            itemContent = { index ->
+                BookItem(
+                    modifier = Modifier.padding(top = 10.dp),
+                    item = books[index]
+                ) {
+                    navigate("book_detail", books[index])
+                }
+            },
+            isLoading = isLoading,
+            loadMore = loadMore
+        )
     }
 }
