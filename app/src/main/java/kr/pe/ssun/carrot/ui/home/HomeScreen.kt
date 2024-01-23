@@ -47,16 +47,11 @@ fun HomeScreen(
         Box(modifier = Modifier.padding(innerPadding)) {
             HomeContent(
                 books = books,
+                isLoading = isLoading,
                 search = viewModel::search,
                 loadMore = viewModel::loadMore,
                 navigate = navigate
             )
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                    color = Color(0xFF4ca066)
-                )
-            }
         }
     }
 }

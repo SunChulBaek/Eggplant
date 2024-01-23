@@ -10,13 +10,16 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kr.pe.ssun.carrot.data.model.Book
 
 @Composable
 fun HomeContent(
     books: List<Book>,
+    isLoading: Boolean,
     search: (String) -> Unit,
     loadMore: () -> Unit,
     navigate: (String, Any?) -> Unit
@@ -64,10 +67,16 @@ fun HomeContent(
                                 books[index]
                             )
                         }
-                        if (index == books.size - 1) {
+                        if (index == books.size - 1 && !isLoading) {
                             loadMore()
                         }
                     }
+                )
+            }
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Color(0xFF4ca066)
                 )
             }
         }
