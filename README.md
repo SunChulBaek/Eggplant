@@ -1,4 +1,4 @@
-# MarvelDex ![Build Badge](https://github.com/SunChulBaek/MarvelDex/actions/workflows/main.yml/badge.svg)
+# Eggplant ![Build Badge](https://github.com/SunChulBaek/Eggplant/actions/workflows/main.yml/badge.svg)
 * Architecture
   * [Compose](https://developer.android.com/jetpack/compose?hl=ko)
   * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
