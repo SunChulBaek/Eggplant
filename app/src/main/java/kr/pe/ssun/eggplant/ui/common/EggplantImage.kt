@@ -39,8 +39,8 @@ fun EggplantImage(
     url: String,
     contentDescription: String?,
     contentScale: ContentScale = ContentScale.Fit,
-    loading: (@Composable () -> Unit)? = null
-) {
+    loading: (@Composable (Modifier) -> Unit) = { CircularProgressIndicator(it) }
+) = Box(modifier = modifier) {
     val context = LocalContext.current
     var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
 
@@ -53,23 +53,15 @@ fun EggplantImage(
         }.await()?.asImageBitmap()
     }
 
-    Box(modifier = modifier) {
-        if (bitmap != null) {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                bitmap = bitmap!!,
-                contentScale = contentScale,
-                contentDescription = contentDescription
-            )
-        } else {
-            loading?.let {
-                loading()
-            } ?: run {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
-        }
+    if (bitmap != null) {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            bitmap = bitmap!!,
+            contentScale = contentScale,
+            contentDescription = contentDescription
+        )
+    } else {
+        loading(Modifier.align(Alignment.Center))
     }
 }
 
