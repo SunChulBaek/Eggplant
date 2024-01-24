@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "kr.pe.ssun.carrot"
+    namespace = "kr.pe.ssun.eggplant"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
